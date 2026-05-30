@@ -1,6 +1,5 @@
 groups:
   - name: node_alerts
-    interval: 30s
     rules:
       - alert: HostHighCpuLoad
         expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 85
@@ -30,7 +29,7 @@ groups:
           description: "Root partition < 15% free ({{ $value | humanize }}%)"
 
       - alert: HostSwapUsageHigh
-        expr: (1 - (node_memory_SwapFree_bytes / node_memory_SwapTotal_bytes)) * 100 > 80
+        expr: node_memory_SwapTotal_bytes > 0 and (1 - (node_memory_SwapFree_bytes / node_memory_SwapTotal_bytes)) * 100 > 80
         for: 10m
         labels:
           severity: warning
@@ -45,3 +44,4 @@ groups:
           severity: critical
         annotations:
           summary: "Node exporter down on {{ $labels.instance }}"
+          description: "Node exporter on {{ $labels.instance }} has been unreachable for more than 2 minutes"

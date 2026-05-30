@@ -9,28 +9,30 @@ route:
   repeat_interval: 4h
 
   routes:
-    # Critical → repeat nhanh hơn
     - matchers:
         - severity = "critical"
       receiver: 'telegram-critical'
       group_wait: 10s
       repeat_interval: 1h
 
-# Critical đè warning cùng instance (tránh spam)
+# Khi critical firing trên instance → chặn toàn bộ warning cùng instance (tránh spam)
 inhibit_rules:
   - source_matchers:
       - severity = "critical"
     target_matchers:
       - severity = "warning"
-    equal: ['alertname', 'instance']
+    equal: ['instance']
+
+x-telegram-common: &telegram-common
+  bot_token: '${TELEGRAM_BOT_TOKEN}'
+  chat_id: ${TELEGRAM_CHAT_ID}
+  parse_mode: 'HTML'
+  send_resolved: true
 
 receivers:
   - name: 'telegram-default'
     telegram_configs:
-      - bot_token: 'PASTE_YOUR_BOT_TOKEN_HERE'    # ← THAY VÀO ĐÂY
-        chat_id: -1001234567890                    # ← THAY VÀO ĐÂY (số nguyên, không phải chuỗi)
-        parse_mode: 'HTML'
-        send_resolved: true
+      - <<: *telegram-common
         message: |
           {{ range .Alerts }}
           {{ if eq .Status "firing" }}🟡 <b>WARNING</b>{{ else }}✅ <b>RESOLVED</b>{{ end }}
@@ -43,10 +45,7 @@ receivers:
 
   - name: 'telegram-critical'
     telegram_configs:
-      - bot_token: 'PASTE_YOUR_BOT_TOKEN_HERE'    # ← THAY VÀO ĐÂY (giống trên)
-        chat_id: -1001234567890                    # ← THAY VÀO ĐÂY (giống trên)
-        parse_mode: 'HTML'
-        send_resolved: true
+      - <<: *telegram-common
         message: |
           {{ range .Alerts }}
           {{ if eq .Status "firing" }}🔴 <b>CRITICAL</b>{{ else }}✅ <b>RESOLVED</b>{{ end }}
