@@ -74,7 +74,7 @@ services:
     container_name: kafka-exporter
     restart: unless-stopped
     command:
-      - '--kafka.server=192.168.1.28:9092'
+      - '--kafka.server=0.0.0.0:9092'
     ports:
       - "0.0.0.0:9903:9093"
     logging:
