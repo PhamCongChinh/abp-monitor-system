@@ -76,7 +76,7 @@ services:
     command:
       - '--kafka.server=192.168.1.28:9092'
     ports:
-      - "9308:9308"
+      - "0.0.0.0:9903:9093"
     logging:
       driver: "json-file"
       options:
