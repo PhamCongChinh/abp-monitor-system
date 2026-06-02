@@ -2,13 +2,15 @@ groups:
   - name: gateway_alerts
     rules:
       - alert: PlatformDataStalled
-        expr: gateway_posts_by_platform_total > 0 and rate(gateway_posts_by_platform_total[15m]) == 0
-        for: 10m
+        expr: |
+          gateway_posts_by_platform_total{platform=~"facebook|youtube|web"} > 0
+          and rate(gateway_posts_by_platform_total{platform=~"facebook|youtube|web"}[1h]) == 0
+        for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "Platform {{ $labels.platform }} ngừng nhận data"
-          description: "Không có post mới từ {{ $labels.platform }} trong 25 phút qua (tổng hiện tại: {{ $value | humanize }})"
+          summary: "Không có tin bài mới từ {{ $labels.platform }}"
+          description: "Platform {{ $labels.platform }} không có bài mới trong 1 giờ qua (tổng: {{ $value | humanize }} bài)"
 
       - alert: GatewayDown
         expr: up{job="gateway"} == 0
