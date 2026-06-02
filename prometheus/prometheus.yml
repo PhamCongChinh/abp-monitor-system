@@ -36,6 +36,10 @@ scrape_configs:
           service: 'gateway'
           env: 'production'
 
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+
   - job_name: 'kafka-exporter'
     static_configs:
       - targets: ['kafka-exporter:9308']
