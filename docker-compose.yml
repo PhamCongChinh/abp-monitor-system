@@ -90,8 +90,9 @@ services:
     environment:
       - REDIS_ADDR=${REDIS_ADDR}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    networks:
+      - default
+      - redisNetwork
     logging:
       driver: "json-file"
       options:
@@ -166,3 +167,7 @@ volumes:
   prometheus_data:
   alertmanager_data:
   grafana_data:
+
+networks:
+  redisNetwork:
+    external: true
