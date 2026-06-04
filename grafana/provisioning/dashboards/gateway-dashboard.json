@@ -90,8 +90,10 @@
       "type": "piechart",
       "gridPos": { "x": 16, "y": 1, "w": 8, "h": 8 },
       "options": {
-        "pieType": "donut",
-        "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }
+        "pieType": "pie",
+        "legend": { "displayMode": "hidden", "placement": "bottom", "values": [] },
+        "tooltip": { "mode": "single" },
+        "displayLabels": ["name", "percent"]
       },
       "fieldConfig": {
         "defaults": {},
