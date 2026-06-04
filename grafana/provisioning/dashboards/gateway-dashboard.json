@@ -5,8 +5,9 @@
   "timezone": "browser",
   "schemaVersion": 39,
   "refresh": "30s",
-  "time": { "from": "now-1h", "to": "now" },
+  "time": { "from": "now/d", "to": "now" },
   "panels": [
+
     {
       "id": 100,
       "title": "Daily Stats",
@@ -14,6 +15,7 @@
       "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
       "collapsed": false
     },
+
     {
       "id": 101,
       "title": "Posts Today by Platform",
@@ -21,17 +23,31 @@
       "gridPos": { "x": 0, "y": 1, "w": 8, "h": 8 },
       "options": {
         "pieType": "pie",
-        "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }
+        "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] },
+        "tooltip": { "mode": "single" }
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "youtube" },   "properties": [{ "id": "color", "value": { "fixedColor": "#FF0000", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "facebook" },  "properties": [{ "id": "color", "value": { "fixedColor": "#1877F2", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "tiktok" },    "properties": [{ "id": "color", "value": { "fixedColor": "#FE2C55", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "telegram" },  "properties": [{ "id": "color", "value": { "fixedColor": "#26A5E4", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "web" },       "properties": [{ "id": "color", "value": { "fixedColor": "#00CED1", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "news_page" }, "properties": [{ "id": "color", "value": { "fixedColor": "#FF9800", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "x" },         "properties": [{ "id": "color", "value": { "fixedColor": "#A0A0A0", "mode": "fixed" } }] }
+        ]
       },
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "increase(gateway_posts_by_platform_total[24h])",
+          "expr": "increase(gateway_posts_by_platform_total[$__range])",
           "legendFormat": "{{platform}}",
           "instant": true
         }
       ]
     },
+
     {
       "id": 102,
       "title": "Posts Today by Endpoint",
@@ -44,17 +60,22 @@
         "orientation": "vertical"
       },
       "fieldConfig": {
-        "defaults": { "unit": "short" }
+        "defaults": { "unit": "short" },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "insert-posts" },        "properties": [{ "id": "color", "value": { "fixedColor": "#5794F2", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "insert-unclassified" }, "properties": [{ "id": "color", "value": { "fixedColor": "#FF7043", "mode": "fixed" } }] }
+        ]
       },
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "increase(gateway_posts_total[24h])",
+          "expr": "increase(gateway_posts_total[$__range])",
           "legendFormat": "{{endpoint}}",
           "instant": true
         }
       ]
     },
+
     {
       "id": 103,
       "title": "Total Posts Today",
@@ -63,20 +84,25 @@
       "options": {
         "reduceOptions": { "calcs": ["lastNotNull"] },
         "colorMode": "value",
-        "textMode": "auto"
+        "textMode": "auto",
+        "graphMode": "none"
       },
       "fieldConfig": {
-        "defaults": { "unit": "short" }
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "fixed", "fixedColor": "#73BF69" }
+        }
       },
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "sum(increase(gateway_posts_total[24h]))",
+          "expr": "sum(increase(gateway_posts_total[$__range]))",
           "legendFormat": "Total",
           "instant": true
         }
       ]
     },
+
     {
       "id": 104,
       "title": "Kafka Writes Today",
@@ -84,22 +110,27 @@
       "gridPos": { "x": 16, "y": 5, "w": 8, "h": 4 },
       "options": {
         "reduceOptions": { "calcs": ["lastNotNull"] },
-        "colorMode": "value",
+        "colorMode": "background",
         "textMode": "value_and_name",
         "orientation": "vertical"
       },
       "fieldConfig": {
-        "defaults": { "unit": "short" }
+        "defaults": { "unit": "short" },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "data-classified" },   "properties": [{ "id": "color", "value": { "fixedColor": "#5794F2", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "data-unclassified" }, "properties": [{ "id": "color", "value": { "fixedColor": "#FF7043", "mode": "fixed" } }] }
+        ]
       },
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "increase(gateway_kafka_write_total[24h])",
+          "expr": "increase(gateway_kafka_write_total[$__range])",
           "legendFormat": "{{topic}}",
           "instant": true
         }
       ]
     },
+
     {
       "id": 105,
       "title": "Posts Trend (hourly)",
@@ -108,8 +139,17 @@
       "fieldConfig": {
         "defaults": {
           "unit": "short",
-          "custom": { "lineWidth": 2, "fillOpacity": 10 }
-        }
+          "custom": { "lineWidth": 2, "fillOpacity": 15, "gradientMode": "opacity" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "youtube" },   "properties": [{ "id": "color", "value": { "fixedColor": "#FF0000", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "facebook" },  "properties": [{ "id": "color", "value": { "fixedColor": "#1877F2", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "tiktok" },    "properties": [{ "id": "color", "value": { "fixedColor": "#FE2C55", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "telegram" },  "properties": [{ "id": "color", "value": { "fixedColor": "#26A5E4", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "web" },       "properties": [{ "id": "color", "value": { "fixedColor": "#00CED1", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "news_page" }, "properties": [{ "id": "color", "value": { "fixedColor": "#FF9800", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "x" },         "properties": [{ "id": "color", "value": { "fixedColor": "#A0A0A0", "mode": "fixed" } }] }
+        ]
       },
       "targets": [
         {
@@ -127,14 +167,27 @@
       "gridPos": { "x": 0, "y": 17, "w": 24, "h": 1 },
       "collapsed": false
     },
+
     {
       "id": 1,
-      "title": "Total Posts by Platform",
+      "title": "Total Posts by Platform (All-time)",
       "type": "piechart",
       "gridPos": { "x": 0, "y": 18, "w": 8, "h": 8 },
       "options": {
-        "pieType": "pie",
+        "pieType": "donut",
         "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "youtube" },   "properties": [{ "id": "color", "value": { "fixedColor": "#FF0000", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "facebook" },  "properties": [{ "id": "color", "value": { "fixedColor": "#1877F2", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "tiktok" },    "properties": [{ "id": "color", "value": { "fixedColor": "#FE2C55", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "telegram" },  "properties": [{ "id": "color", "value": { "fixedColor": "#26A5E4", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "web" },       "properties": [{ "id": "color", "value": { "fixedColor": "#00CED1", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "news_page" }, "properties": [{ "id": "color", "value": { "fixedColor": "#FF9800", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "x" },         "properties": [{ "id": "color", "value": { "fixedColor": "#A0A0A0", "mode": "fixed" } }] }
+        ]
       },
       "targets": [
         {
@@ -145,6 +198,7 @@
         }
       ]
     },
+
     {
       "id": 2,
       "title": "Request Rate (req/s)",
@@ -153,7 +207,7 @@
       "fieldConfig": {
         "defaults": {
           "unit": "reqps",
-          "custom": { "lineWidth": 2, "fillOpacity": 10 }
+          "custom": { "lineWidth": 2, "fillOpacity": 15, "gradientMode": "opacity" }
         }
       },
       "targets": [
@@ -164,16 +218,17 @@
         }
       ]
     },
+
     {
       "id": 3,
-      "title": "Dead Letter Queue Size",
+      "title": "Dead Letter Queue",
       "type": "stat",
-      "gridPos": { "x": 16, "y": 18, "w": 8, "h": 4 },
+      "gridPos": { "x": 16, "y": 18, "w": 4, "h": 4 },
       "options": {
         "reduceOptions": { "calcs": ["lastNotNull"] },
         "colorMode": "background",
         "textMode": "auto",
-        "orientation": "auto"
+        "graphMode": "area"
       },
       "fieldConfig": {
         "defaults": {
@@ -181,9 +236,9 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 10 },
-              { "color": "red", "value": 50 }
+              { "color": "#73BF69", "value": null },
+              { "color": "#F2CC0C", "value": 10 },
+              { "color": "#F2495C", "value": 50 }
             ]
           }
         }
@@ -196,19 +251,58 @@
         }
       ]
     },
+
+    {
+      "id": 14,
+      "title": "Kafka Success Rate",
+      "type": "gauge",
+      "gridPos": { "x": 20, "y": 18, "w": 4, "h": 4 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "auto",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#F2495C", "value": null },
+              { "color": "#F2CC0C", "value": 90 },
+              { "color": "#73BF69", "value": 99 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sum(rate(gateway_kafka_write_total{result=\"success\"}[5m])) / sum(rate(gateway_kafka_write_total[5m])) * 100",
+          "legendFormat": "Success %"
+        }
+      ]
+    },
+
     {
       "id": 4,
-      "title": "Total Posts Processed",
+      "title": "Total Posts Processed (All-time)",
       "type": "stat",
       "gridPos": { "x": 16, "y": 22, "w": 8, "h": 4 },
       "options": {
         "reduceOptions": { "calcs": ["lastNotNull"] },
         "colorMode": "value",
         "textMode": "auto",
-        "orientation": "auto"
+        "graphMode": "none"
       },
       "fieldConfig": {
-        "defaults": { "unit": "short" }
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "fixed", "fixedColor": "#5794F2" }
+        }
       },
       "targets": [
         {
@@ -218,6 +312,7 @@
         }
       ]
     },
+
     {
       "id": 5,
       "title": "Request Latency Percentiles",
@@ -227,7 +322,12 @@
         "defaults": {
           "unit": "s",
           "custom": { "lineWidth": 2, "fillOpacity": 5 }
-        }
+        },
+        "overrides": [
+          { "matcher": { "id": "byRegexp", "options": "p50.*" }, "properties": [{ "id": "color", "value": { "fixedColor": "#73BF69", "mode": "fixed" } }] },
+          { "matcher": { "id": "byRegexp", "options": "p95.*" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2CC0C", "mode": "fixed" } }] },
+          { "matcher": { "id": "byRegexp", "options": "p99.*" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2495C", "mode": "fixed" } }] }
+        ]
       },
       "targets": [
         {
@@ -247,6 +347,7 @@
         }
       ]
     },
+
     {
       "id": 6,
       "title": "Kafka Write Rate by Topic",
@@ -255,8 +356,13 @@
       "fieldConfig": {
         "defaults": {
           "unit": "reqps",
-          "custom": { "lineWidth": 2, "fillOpacity": 10 }
-        }
+          "custom": { "lineWidth": 2, "fillOpacity": 15, "gradientMode": "opacity" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byRegexp", "options": ".*success.*" }, "properties": [{ "id": "color", "value": { "fixedColor": "#73BF69", "mode": "fixed" } }] },
+          { "matcher": { "id": "byRegexp", "options": ".*error.*"   }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2495C", "mode": "fixed" } }] },
+          { "matcher": { "id": "byRegexp", "options": ".*failure.*" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2495C", "mode": "fixed" } }] }
+        ]
       },
       "targets": [
         {
@@ -266,6 +372,7 @@
         }
       ]
     },
+
     {
       "id": 7,
       "title": "Posts Rate by Platform (per 5m)",
@@ -274,8 +381,17 @@
       "fieldConfig": {
         "defaults": {
           "unit": "reqps",
-          "custom": { "lineWidth": 2, "fillOpacity": 8 }
-        }
+          "custom": { "lineWidth": 2, "fillOpacity": 10, "gradientMode": "opacity" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "youtube" },   "properties": [{ "id": "color", "value": { "fixedColor": "#FF0000", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "facebook" },  "properties": [{ "id": "color", "value": { "fixedColor": "#1877F2", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "tiktok" },    "properties": [{ "id": "color", "value": { "fixedColor": "#FE2C55", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "telegram" },  "properties": [{ "id": "color", "value": { "fixedColor": "#26A5E4", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "web" },       "properties": [{ "id": "color", "value": { "fixedColor": "#00CED1", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "news_page" }, "properties": [{ "id": "color", "value": { "fixedColor": "#FF9800", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "x" },         "properties": [{ "id": "color", "value": { "fixedColor": "#A0A0A0", "mode": "fixed" } }] }
+        ]
       },
       "targets": [
         {
@@ -285,6 +401,7 @@
         }
       ]
     },
+
     {
       "id": 8,
       "title": "Go Goroutines",
@@ -293,7 +410,8 @@
       "fieldConfig": {
         "defaults": {
           "unit": "short",
-          "custom": { "lineWidth": 2, "fillOpacity": 10 }
+          "custom": { "lineWidth": 2, "fillOpacity": 15, "gradientMode": "opacity" },
+          "color": { "mode": "fixed", "fixedColor": "#73BF69" }
         }
       },
       "targets": [
@@ -304,6 +422,7 @@
         }
       ]
     },
+
     {
       "id": 9,
       "title": "Go Heap Memory",
@@ -312,8 +431,12 @@
       "fieldConfig": {
         "defaults": {
           "unit": "bytes",
-          "custom": { "lineWidth": 2, "fillOpacity": 10 }
-        }
+          "custom": { "lineWidth": 2, "fillOpacity": 10, "gradientMode": "opacity" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "heap alloc" }, "properties": [{ "id": "color", "value": { "fixedColor": "#5794F2", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "heap sys" },   "properties": [{ "id": "color", "value": { "fixedColor": "#F2CC0C", "mode": "fixed" } }] }
+        ]
       },
       "targets": [
         {
@@ -328,11 +451,43 @@
         }
       ]
     },
+
+    {
+      "id": 15,
+      "title": "HTTP Error Rate",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 42, "w": 12, "h": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "custom": { "lineWidth": 2, "fillOpacity": 20, "gradientMode": "opacity" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "4xx rate" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2CC0C", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "5xx rate" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2495C", "mode": "fixed" } }] }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sum(rate(gateway_requests_total{status=~\"4..\"}[5m])) / sum(rate(gateway_requests_total[5m]))",
+          "legendFormat": "4xx rate"
+        },
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sum(rate(gateway_requests_total{status=~\"5..\"}[5m])) / sum(rate(gateway_requests_total[5m]))",
+          "legendFormat": "5xx rate"
+        }
+      ]
+    },
+
     {
       "id": 10,
       "title": "Request Duration Heatmap",
       "type": "heatmap",
-      "gridPos": { "x": 0, "y": 42, "w": 24, "h": 8 },
+      "gridPos": { "x": 12, "y": 42, "w": 12, "h": 8 },
       "options": {
         "calculate": false,
         "yAxis": { "unit": "s" },
@@ -358,6 +513,7 @@
       "gridPos": { "x": 0, "y": 50, "w": 24, "h": 1 },
       "collapsed": false
     },
+
     {
       "id": 11,
       "title": "Kafka Consumer Lag by Topic",
@@ -366,13 +522,13 @@
       "fieldConfig": {
         "defaults": {
           "unit": "short",
-          "custom": { "lineWidth": 2, "fillOpacity": 10 },
+          "custom": { "lineWidth": 2, "fillOpacity": 10, "gradientMode": "opacity" },
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 1000 },
-              { "color": "red", "value": 10000 }
+              { "color": "#73BF69", "value": null },
+              { "color": "#F2CC0C", "value": 1000 },
+              { "color": "#F2495C", "value": 10000 }
             ]
           }
         }
@@ -385,6 +541,7 @@
         }
       ]
     },
+
     {
       "id": 12,
       "title": "Kafka Consumer Lag by Group",
@@ -393,7 +550,7 @@
       "fieldConfig": {
         "defaults": {
           "unit": "short",
-          "custom": { "lineWidth": 2, "fillOpacity": 10 }
+          "custom": { "lineWidth": 2, "fillOpacity": 10, "gradientMode": "opacity" }
         }
       },
       "targets": [
@@ -404,6 +561,7 @@
         }
       ]
     },
+
     {
       "id": 13,
       "title": "Kafka Total Lag",
@@ -412,7 +570,8 @@
       "options": {
         "reduceOptions": { "calcs": ["lastNotNull"] },
         "colorMode": "background",
-        "textMode": "auto"
+        "textMode": "auto",
+        "graphMode": "area"
       },
       "fieldConfig": {
         "defaults": {
@@ -420,9 +579,9 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 1000 },
-              { "color": "red", "value": 10000 }
+              { "color": "#73BF69", "value": null },
+              { "color": "#F2CC0C", "value": 1000 },
+              { "color": "#F2495C", "value": 10000 }
             ]
           }
         }
@@ -434,6 +593,70 @@
           "legendFormat": "Total Lag"
         }
       ]
+    },
+
+    {
+      "id": 16,
+      "title": "Kafka Write Errors Today",
+      "type": "stat",
+      "gridPos": { "x": 8, "y": 59, "w": 8, "h": 4 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "textMode": "value_and_name",
+        "orientation": "vertical"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#73BF69", "value": null },
+              { "color": "#F2CC0C", "value": 1 },
+              { "color": "#F2495C", "value": 100 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "increase(gateway_kafka_write_total{result!=\"success\"}[$__range])",
+          "legendFormat": "{{topic}}",
+          "instant": true
+        }
+      ]
+    },
+
+    {
+      "id": 17,
+      "title": "Kafka Write Success vs Error",
+      "type": "timeseries",
+      "gridPos": { "x": 16, "y": 59, "w": 8, "h": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": { "lineWidth": 2, "fillOpacity": 15, "gradientMode": "opacity" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "success" }, "properties": [{ "id": "color", "value": { "fixedColor": "#73BF69", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "error" },   "properties": [{ "id": "color", "value": { "fixedColor": "#F2495C", "mode": "fixed" } }] }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sum(rate(gateway_kafka_write_total{result=\"success\"}[5m]))",
+          "legendFormat": "success"
+        },
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sum(rate(gateway_kafka_write_total{result!=\"success\"}[5m]))",
+          "legendFormat": "error"
+        }
+      ]
     }
+
   ]
 }
