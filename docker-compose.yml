@@ -14,7 +14,7 @@ services:
       - '--path.sysfs=/host/sys'
       - '--path.rootfs=/rootfs'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
-      - '--web.listen-address=:9100'
+      - '--web.listen-address=:9101'
     logging:
       driver: "json-file"
       options:
@@ -27,7 +27,7 @@ services:
     restart: unless-stopped
     user: "65534:65534"
     ports:
-      - "0.0.0.0:9901:9090"
+      - "127.0.0.1:9901:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./prometheus/rules:/etc/prometheus/rules:ro
@@ -56,7 +56,7 @@ services:
     restart: unless-stopped
     user: "65534:65534"
     ports:
-      - "0.0.0.0:9902:9093"
+      - "127.0.0.1:9902:9093"
     volumes:
       - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
       - alertmanager_data:/alertmanager
@@ -74,9 +74,31 @@ services:
     container_name: kafka-exporter
     restart: unless-stopped
     command:
-      - '--kafka.server=192.168.1.28:9092'
-    ports:
-      - "9308:9308"
+      - '--kafka.server=host.docker.internal:9092'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: cadvisor
+    restart: unless-stopped
+    privileged: true
+    devices:
+      - /dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+    command:
+      - '--housekeeping_interval=30s'
+      - '--docker_only=true'
+      - '--disable_metrics=percpu,sched,tcp,udp,disk,diskIO,hugetlb,referenced_memory,cpu_topology,resctrl'
     logging:
       driver: "json-file"
       options:
