@@ -117,7 +117,7 @@ services:
         max-file: "3"
 
   postgres-exporter:
-    image: bitnami/postgres-exporter:0.15.0
+    image: bitnami/postgres-exporter:latest
     container_name: postgres-exporter
     restart: unless-stopped
     environment:
