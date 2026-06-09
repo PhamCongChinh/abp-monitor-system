@@ -74,7 +74,7 @@ groups:
           description: "Consumer không theo kịp producer — downstream có thể đang nghẽn. Kiểm tra BullMQ / Java processor"
 
       - alert: KafkaHighLag
-        expr: sum by (consumergroup, topic) (kafka_consumergroup_lag) > 50000
+        expr: sum by (consumergroup, topic) (kafka_consumergroup_lag) > 500
         for: 5m
         labels:
           severity: warning
@@ -91,7 +91,7 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "⚠️ MongoDB connections {{ $value | humanizePercentage }} capacity"
+          summary: "⚠️ MongoDB đang dùng {{ $value | humanizePercentage }} số kết nối tối đa"
           description: "Client không dùng connection pool đúng — combo này từng gây Mongo chết hàng loạt"
 
       - alert: MongoDBHighMemory

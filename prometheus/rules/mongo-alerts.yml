@@ -7,8 +7,8 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "MongoDB is down"
-          description: "MongoDB instance has been unreachable for more than 1 minute."
+          summary: "🔴 MongoDB không phản hồi"
+          description: "MongoDB không kết nối được hơn 1 phút — kiểm tra container và disk"
 
       - alert: MongoDBTooManyConnections
         expr: mongodb_connections{state="current"} > 500
@@ -16,8 +16,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "MongoDB too many connections ({{ $value }})"
-          description: "Current connections exceeded 500 for 5 minutes."
+          summary: "⚠️ MongoDB quá nhiều kết nối ({{ $value }})"
+          description: "Số kết nối vượt 500 liên tục 5 phút — kiểm tra connection pool phía client"
 
       - alert: MongoDBHighMemory
         expr: mongodb_memory{type="resident"} > 2048
@@ -25,8 +25,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "MongoDB high resident memory ({{ $value }}MB)"
-          description: "MongoDB resident memory exceeded 2GB for 5 minutes."
+          summary: "⚠️ MongoDB RAM cao ({{ $value }}MB)"
+          description: "Bộ nhớ resident vượt 2GB liên tục 5 phút — kiểm tra query có COLLSCAN không"
 
       - alert: MongoDBReplicationLagHigh
         expr: mongodb_mongod_replset_member_optime_date{state="SECONDARY"} - on() mongodb_mongod_replset_member_optime_date{state="PRIMARY"} > 30
@@ -34,5 +34,5 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "MongoDB replication lag is high ({{ $value }}s)"
-          description: "Replication lag exceeded 30 seconds."
+          summary: "⚠️ MongoDB replication lag cao ({{ $value }}s)"
+          description: "Độ trễ replication vượt 30 giây — secondary đang bị tụt hậu so với primary"

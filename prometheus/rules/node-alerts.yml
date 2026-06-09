@@ -29,16 +29,16 @@ groups:
           description: "Phân vùng / đã dùng {{ $value | printf \"%.1f\" }}% — cần dọn sớm trước khi Mongo/Kafka bị ảnh hưởng"
 
 
-      - alert: HostSwapUsageHigh
-        expr: |
-          (1 - (node_memory_SwapFree_bytes / node_memory_SwapTotal_bytes)) * 100 > 80
-          and node_memory_SwapTotal_bytes > 0
-        for: 10m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Swap cao trên {{ $labels.instance }}"
-          description: "Swap đã dùng trên 80% (hiện tại: {{ $value | printf \"%.1f\" }}%)"
+      # - alert: HostSwapUsageHigh
+      #   expr: |
+      #     (1 - (node_memory_SwapFree_bytes / node_memory_SwapTotal_bytes)) * 100 > 80
+      #     and node_memory_SwapTotal_bytes > 0
+      #   for: 10m
+      #   labels:
+      #     severity: warning
+      #   annotations:
+      #     summary: "Swap cao trên {{ $labels.instance }}"
+      #     description: "Swap đã dùng trên 80% (hiện tại: {{ $value | printf \"%.1f\" }}%)"
 
       - alert: NodeExporterDown
         expr: up{job=~"node-exporter.*"} == 0

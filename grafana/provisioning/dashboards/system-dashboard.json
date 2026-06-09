@@ -1,4 +1,4 @@
-{
+﻿﻿{
     "uid":  "system-resources",
     "title":  "System Resources",
     "tags":  [
@@ -429,7 +429,7 @@
                    },
                    {
                        "id":  1,
-                       "title":  "TÃ i nguyÃªn há»‡ thá»‘ng",
+                       "title":  "Tài nguyên hệ thống",
                        "type":  "row",
                        "gridPos":  {
                                        "x":  0,
@@ -441,7 +441,7 @@
                    },
                    {
                        "id":  10,
-                       "title":  "CPU Hiá»‡n táº¡i",
+                       "title":  "CPU Hiện tại",
                        "type":  "stat",
                        "gridPos":  {
                                        "x":  0,
@@ -501,7 +501,7 @@
                    },
                    {
                        "id":  11,
-                       "title":  "RAM ÄÃ£ dÃ¹ng",
+                       "title":  "RAM Đã dùng",
                        "type":  "stat",
                        "gridPos":  {
                                        "x":  4,
@@ -559,7 +559,7 @@
                    },
                    {
                        "id":  12,
-                       "title":  "RAM CÃ²n láº¡i",
+                       "title":  "RAM Còn lại",
                        "type":  "stat",
                        "gridPos":  {
                                        "x":  8,
@@ -617,7 +617,7 @@
                    },
                    {
                        "id":  13,
-                       "title":  "Disk ÄÃ£ dÃ¹ng %",
+                       "title":  "Disk Đã dùng %",
                        "type":  "gauge",
                        "gridPos":  {
                                        "x":  12,
@@ -677,7 +677,7 @@
                    },
                    {
                        "id":  14,
-                       "title":  "Disk CÃ²n láº¡i",
+                       "title":  "Disk Còn lại",
                        "type":  "stat",
                        "gridPos":  {
                                        "x":  16,
@@ -734,7 +734,7 @@
                    },
                    {
                        "id":  15,
-                       "title":  "Swap ÄÃ£ dÃ¹ng",
+                       "title":  "Swap Đã dùng",
                        "type":  "stat",
                        "gridPos":  {
                                        "x":  20,
@@ -793,7 +793,7 @@
                    },
                    {
                        "id":  2,
-                       "title":  "Biá»ƒu Ä‘á»“ theo thá»i gian",
+                       "title":  "Biểu đồ theo thời gian",
                        "type":  "row",
                        "gridPos":  {
                                        "x":  0,
