@@ -1,0 +1,384 @@
+{
+  "uid": "postgres-overview",
+  "title": "PostgreSQL Overview",
+  "tags": ["postgres", "database"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "refresh": "30s",
+  "time": { "from": "now-1h", "to": "now" },
+  "panels": [
+
+    {
+      "id": 1,
+      "title": "Trạng thái",
+      "type": "row",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+
+    {
+      "id": 2,
+      "title": "PostgreSQL Up",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 1, "w": 4, "h": 4 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "textMode": "auto",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            { "type": "value", "options": { "0": { "text": "DOWN", "color": "#F2495C" }, "1": { "text": "UP", "color": "#73BF69" } } }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#F2495C", "value": null },
+              { "color": "#73BF69", "value": 1 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus" }, "expr": "pg_up", "legendFormat": "PostgreSQL", "instant": true }
+      ]
+    },
+
+    {
+      "id": 3,
+      "title": "Active Connections",
+      "type": "stat",
+      "gridPos": { "x": 4, "y": 1, "w": 4, "h": 4 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "textMode": "auto",
+        "graphMode": "area"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#73BF69", "value": null },
+              { "color": "#F2CC0C", "value": 80 },
+              { "color": "#F2495C", "value": 150 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus" }, "expr": "sum(pg_stat_activity_count{state=\"active\"})", "legendFormat": "active", "instant": true }
+      ]
+    },
+
+    {
+      "id": 4,
+      "title": "Max Connections",
+      "type": "stat",
+      "gridPos": { "x": 8, "y": 1, "w": 4, "h": 4 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "value",
+        "textMode": "auto",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "fixed", "fixedColor": "#A0A0A0" }
+        }
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus" }, "expr": "pg_settings_max_connections", "legendFormat": "max", "instant": true }
+      ]
+    },
+
+    {
+      "id": 5,
+      "title": "Connections % Used  ⭐",
+      "type": "gauge",
+      "gridPos": { "x": 12, "y": 1, "w": 6, "h": 4 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "auto",
+        "showThresholdMarkers": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#73BF69", "value": null },
+              { "color": "#F2CC0C", "value": 60 },
+              { "color": "#F2495C", "value": 85 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sum(pg_stat_activity_count) / pg_settings_max_connections * 100",
+          "legendFormat": "used %",
+          "instant": true
+        }
+      ]
+    },
+
+    {
+      "id": 6,
+      "title": "Uptime",
+      "type": "stat",
+      "gridPos": { "x": 18, "y": 1, "w": 6, "h": 4 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "value",
+        "textMode": "auto",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": { "mode": "fixed", "fixedColor": "#73BF69" }
+        }
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus" }, "expr": "time() - pg_postmaster_start_time_seconds", "legendFormat": "uptime", "instant": true }
+      ]
+    },
+
+    {
+      "id": 10,
+      "title": "Connections & Queries",
+      "type": "row",
+      "gridPos": { "x": 0, "y": 5, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+
+    {
+      "id": 11,
+      "title": "Connections by State",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 6, "w": 12, "h": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "lineWidth": 2, "fillOpacity": 12, "gradientMode": "opacity" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "active" },     "properties": [{ "id": "color", "value": { "fixedColor": "#73BF69", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "idle" },       "properties": [{ "id": "color", "value": { "fixedColor": "#5794F2", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "idle in transaction" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2CC0C", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "waiting" },    "properties": [{ "id": "color", "value": { "fixedColor": "#F2495C", "mode": "fixed" } }] }
+        ]
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus" }, "expr": "pg_stat_activity_count", "legendFormat": "{{state}}" }
+      ]
+    },
+
+    {
+      "id": 12,
+      "title": "Transactions per Second  ⭐",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 6, "w": 12, "h": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops",
+          "custom": { "lineWidth": 2, "fillOpacity": 10, "gradientMode": "opacity" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "commit" },   "properties": [{ "id": "color", "value": { "fixedColor": "#73BF69", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "rollback" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2495C", "mode": "fixed" } }] }
+        ]
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus" }, "expr": "sum(rate(pg_stat_database_xact_commit[5m]))",   "legendFormat": "commit" },
+        { "datasource": { "type": "prometheus" }, "expr": "sum(rate(pg_stat_database_xact_rollback[5m]))", "legendFormat": "rollback" }
+      ]
+    },
+
+    {
+      "id": 20,
+      "title": "I/O & Cache",
+      "type": "row",
+      "gridPos": { "x": 0, "y": 14, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+
+    {
+      "id": 21,
+      "title": "Cache Hit Rate  ⭐ (< 95% = cần RAM)",
+      "type": "gauge",
+      "gridPos": { "x": 0, "y": 15, "w": 8, "h": 6 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "auto",
+        "showThresholdMarkers": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#F2495C", "value": null },
+              { "color": "#F2CC0C", "value": 90 },
+              { "color": "#73BF69", "value": 95 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sum(rate(pg_stat_database_blks_hit[5m])) / (sum(rate(pg_stat_database_blks_hit[5m])) + sum(rate(pg_stat_database_blks_read[5m]))) * 100",
+          "legendFormat": "hit rate %",
+          "instant": true
+        }
+      ]
+    },
+
+    {
+      "id": 22,
+      "title": "Blocks Read vs Hit",
+      "type": "timeseries",
+      "gridPos": { "x": 8, "y": 15, "w": 16, "h": 6 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "iops",
+          "custom": { "lineWidth": 2, "fillOpacity": 10, "gradientMode": "opacity" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "hit (cache)" }, "properties": [{ "id": "color", "value": { "fixedColor": "#73BF69", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "read (disk)" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2495C", "mode": "fixed" } }] }
+        ]
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus" }, "expr": "sum(rate(pg_stat_database_blks_hit[5m]))",  "legendFormat": "hit (cache)" },
+        { "datasource": { "type": "prometheus" }, "expr": "sum(rate(pg_stat_database_blks_read[5m]))", "legendFormat": "read (disk)" }
+      ]
+    },
+
+    {
+      "id": 30,
+      "title": "Database Size & Rows",
+      "type": "row",
+      "gridPos": { "x": 0, "y": 21, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+
+    {
+      "id": 31,
+      "title": "Database Size",
+      "type": "bargauge",
+      "gridPos": { "x": 0, "y": 22, "w": 10, "h": 8 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "showUnfilled": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "#5794F2", "value": null }]
+          }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "pg_database_size_bytes",
+          "legendFormat": "{{datname}}",
+          "instant": true
+        }
+      ]
+    },
+
+    {
+      "id": 32,
+      "title": "Rows Inserted / Updated / Deleted (per sec)",
+      "type": "timeseries",
+      "gridPos": { "x": 10, "y": 22, "w": 14, "h": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops",
+          "custom": { "lineWidth": 2, "fillOpacity": 8, "gradientMode": "opacity" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "insert" }, "properties": [{ "id": "color", "value": { "fixedColor": "#73BF69", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "update" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2CC0C", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "delete" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2495C", "mode": "fixed" } }] }
+        ]
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus" }, "expr": "sum(rate(pg_stat_database_tup_inserted[5m]))", "legendFormat": "insert" },
+        { "datasource": { "type": "prometheus" }, "expr": "sum(rate(pg_stat_database_tup_updated[5m]))",  "legendFormat": "update" },
+        { "datasource": { "type": "prometheus" }, "expr": "sum(rate(pg_stat_database_tup_deleted[5m]))",  "legendFormat": "delete" }
+      ]
+    },
+
+    {
+      "id": 40,
+      "title": "Locks & Conflicts  ⭐",
+      "type": "row",
+      "gridPos": { "x": 0, "y": 30, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+
+    {
+      "id": 41,
+      "title": "Locks by Mode",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 31, "w": 12, "h": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "lineWidth": 2, "fillOpacity": 10, "gradientMode": "opacity" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byRegexp", "options": ".*Exclusive.*" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2495C", "mode": "fixed" } }] },
+          { "matcher": { "id": "byRegexp", "options": ".*Share.*" },     "properties": [{ "id": "color", "value": { "fixedColor": "#F2CC0C", "mode": "fixed" } }] }
+        ]
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus" }, "expr": "pg_locks_count", "legendFormat": "{{mode}}" }
+      ]
+    },
+
+    {
+      "id": 42,
+      "title": "Deadlocks & Conflicts",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 31, "w": 12, "h": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "lineWidth": 2, "fillOpacity": 15, "gradientMode": "opacity" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "deadlocks" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2495C", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "conflicts" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2CC0C", "mode": "fixed" } }] }
+        ]
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus" }, "expr": "sum(rate(pg_stat_database_deadlocks[5m]))", "legendFormat": "deadlocks" },
+        { "datasource": { "type": "prometheus" }, "expr": "sum(rate(pg_stat_database_conflicts[5m]))",  "legendFormat": "conflicts" }
+      ]
+    }
+
+  ]
+}
