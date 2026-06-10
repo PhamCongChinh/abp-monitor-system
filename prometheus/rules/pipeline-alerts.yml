@@ -14,13 +14,14 @@ groups:
           description: "{{ $labels.job }} tại {{ $labels.instance }} không phản hồi hơn 2 phút"
 
       - alert: PlatformNoData2h
-        expr: increase(gateway_posts_by_platform_total{platform!~"news_page|x|tt|tiktok"}[2h]) == 0
+        expr: increase(gateway_posts_by_platform_total{platform!~"news_page|tt"}[2h]) == 0
         for: 5m
         labels:
           severity: critical
+          platform: "{{ $labels.platform }}"
         annotations:
-          summary: "🔴 Platform {{ $labels.platform }} không có data 2h"
-          description: "Crawler bị block, API 429/403, hoặc pipeline tắc trước Kafka"
+          summary: "🔴 {{ $labels.platform }} không có data 2h"
+          description: "Crawler {{ $labels.platform }} bị block, API 429/403, hoặc pipeline tắc trước Kafka"
 
       - alert: OOMKillDetected
         expr: increase(node_vmstat_oom_kill[5m]) > 0
