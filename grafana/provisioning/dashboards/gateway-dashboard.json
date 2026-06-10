@@ -5,7 +5,7 @@
   "timezone": "Asia/Ho_Chi_Minh",
   "schemaVersion": 39,
   "refresh": "30s",
-  "time": { "from": "now/d", "to": "now" },
+  "time": { "from": "now-3h", "to": "now" },
   "panels": [
 
     {
