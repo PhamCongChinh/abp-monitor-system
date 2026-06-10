@@ -20,6 +20,7 @@
       "id": 501,
       "title": "Tổng bài hôm nay",
       "type": "stat",
+      "timeFrom": "now/d",
       "gridPos": { "x": 0, "y": 1, "w": 4, "h": 8 },
       "options": {
         "reduceOptions": { "calcs": ["lastNotNull"] },
@@ -47,6 +48,7 @@
       "id": 502,
       "title": "Số bài theo nền tảng hôm nay",
       "type": "bargauge",
+      "timeFrom": "now/d",
       "gridPos": { "x": 4, "y": 1, "w": 12, "h": 8 },
       "options": {
         "reduceOptions": { "calcs": ["lastNotNull"] },
@@ -90,6 +92,7 @@
       "id": 503,
       "title": "Phân bổ nền tảng hôm nay",
       "type": "piechart",
+      "timeFrom": "now/d",
       "gridPos": { "x": 16, "y": 1, "w": 8, "h": 8 },
       "options": {
         "pieType": "pie",
