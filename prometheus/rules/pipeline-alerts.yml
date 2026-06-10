@@ -42,15 +42,6 @@ groups:
           summary: "🔴 Disk còn {{ $value | humanize }}% — MongoDB sẽ dừng ghi"
           description: "Mount {{ $labels.mountpoint }} trên {{ $labels.instance }} sắp đầy"
 
-      - alert: MongoDBUnreachable
-        expr: mongodb_up == 0
-        for: 1m
-        labels:
-          severity: critical
-        annotations:
-          summary: "🔴 MongoDB không nhận kết nối"
-          description: "mongodb_up == 0 liên tục 1 phút — kiểm tra container và disk"
-
       - alert: KafkaTotalLagExplosion
         expr: sum(kafka_consumergroup_lag) > 200000
         for: 3m
@@ -113,17 +104,6 @@ groups:
         annotations:
           summary: "⚠️ Disk {{ $value | humanize }}% — cần dọn sớm"
           description: "Mount {{ $labels.mountpoint }} đang đầy dần. Kafka log + MongoDB data tăng nhanh"
-
-      - alert: GatewayHigh500Rate
-        expr: |
-          sum(rate(gateway_http_errors_total{code="500"}[5m]))
-          / sum(rate(gateway_requests_total[5m])) > 0.01
-        for: 2m
-        labels:
-          severity: warning
-        annotations:
-          summary: "⚠️ Lỗi 500 vượt 1% ({{ $value | humanizePercentage }})"
-          description: "Kiểm tra logs gateway — có thể Kafka write fail hoặc MongoDB timeout"
 
       - alert: GatewayUnknownPlatformBot
         expr: rate(gateway_unknown_platform_total[10m]) > 100
