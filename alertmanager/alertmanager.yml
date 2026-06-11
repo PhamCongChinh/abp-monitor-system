@@ -13,7 +13,7 @@ route:
         - severity = "critical"
       receiver: 'telegram-critical'
       group_wait: 10s
-      repeat_interval: 1h
+      repeat_interval: 3h
 
 # Khi critical firing trên instance → chặn toàn bộ warning cùng instance (tránh spam)
 inhibit_rules:

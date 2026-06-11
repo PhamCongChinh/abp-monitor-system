@@ -85,14 +85,3 @@ groups:
         annotations:
           summary: "MongoDB đang dùng {{ $value | humanizePercentage }} số kết nối tối đa"
           description: "Client không dùng connection pool đúng — combo này từng gây Mongo chết hàng loạt"
-
-      - alert: DiskWarning
-        expr: |
-          (1 - node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs"}
-          / node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs"}) * 100 > 80
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Disk {{ $value | humanize }}% — cần dọn sớm"
-          description: "Mount {{ $labels.mountpoint }} đang đầy dần. Kafka log + MongoDB data tăng nhanh"
