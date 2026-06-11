@@ -16,7 +16,10 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
+          envs: TELEGRAM_BOT_TOKEN,TELEGRAM_CHAT_ID
           script: |
             cd ~/abp-monitor-system
             git pull origin main
-            docker compose up -d --remove-orphans
+            TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN \
+            TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID \
+            bash deploy.sh
