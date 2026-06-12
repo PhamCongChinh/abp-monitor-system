@@ -18,3 +18,7 @@ envsubst '${TELEGRAM_BOT_TOKEN} ${TELEGRAM_CHAT_ID}' \
 echo "Generated alertmanager/alertmanager.yml"
 
 docker compose up -d --remove-orphans
+
+# Reload Prometheus để áp dụng rules mới (cần --web.enable-lifecycle)
+sleep 5
+curl -s -X POST http://localhost:9901/-/reload && echo "Prometheus reloaded"
