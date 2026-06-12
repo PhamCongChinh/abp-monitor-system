@@ -10,6 +10,12 @@ route:
 
   routes:
     - matchers:
+        - alertname = "KafkaHighLag"
+      receiver: 'telegram-default'
+      group_wait: 10s
+      repeat_interval: 15m
+
+    - matchers:
         - alertname =~ "MongoDBDown|PostgreSQLDown|KafkaDown"
       receiver: 'telegram-critical'
       group_wait: 10s
