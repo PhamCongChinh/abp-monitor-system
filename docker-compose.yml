@@ -85,23 +85,6 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  redis-exporter:
-    image: oliver006/redis_exporter:v1.63.0
-    container_name: redis-exporter
-    restart: unless-stopped
-    environment:
-      - REDIS_ADDR=${REDIS_ADDR}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - default
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-
   mongodb-exporter:
     image: percona/mongodb_exporter:0.40
     container_name: mongodb-exporter
@@ -186,6 +169,3 @@ volumes:
   alertmanager_data:
   grafana_data:
 
-networks:
-  redisNetwork:
-    external: true
