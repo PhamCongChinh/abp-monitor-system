@@ -38,9 +38,9 @@ receivers:
         message: |
           {{ range .Alerts }}
           {{ if eq .Status "firing" }}🟡 <b>CẢNH BÁO</b>{{ else }}✅ <b>ĐÃ KHẮC PHỤC</b>{{ end }}
-          <b>Loại:</b> {{ .Labels.alertname }}
-          <b>Máy chủ:</b> {{ .Labels.instance }} (103.97.125.64)
-          <b>Tóm tắt:</b> {{ .Annotations.summary }}
+          <b>Loại:</b> <b>{{ .Labels.alertname }}</b>
+          <b>Máy chủ:</b> {{ if .Labels.instance }}{{ .Labels.instance }} — {{ end }}103.97.125.64
+          <b>Tóm tắt:</b> <b>{{ .Annotations.summary }}</b>
           <b>Chi tiết:</b> {{ .Annotations.description }}
           <b>Thời gian:</b> {{ .StartsAt.Format "02/01/2006 15:04:05" }}
           {{ end }}
@@ -54,9 +54,9 @@ receivers:
         message: |
           {{ range .Alerts }}
           {{ if eq .Status "firing" }}🔴 <b>KHẨN CẤP</b>{{ else }}✅ <b>ĐÃ KHẮC PHỤC</b>{{ end }}
-          <b>Loại:</b> {{ .Labels.alertname }}
-          <b>Máy chủ:</b> {{ .Labels.instance }} (103.97.125.64)
-          <b>Tóm tắt:</b> {{ .Annotations.summary }}
+          <b>Loại:</b> <b>{{ .Labels.alertname }}</b>
+          <b>Máy chủ:</b> {{ if .Labels.instance }}{{ .Labels.instance }} — {{ end }}103.97.125.64
+          <b>Tóm tắt:</b> <b>{{ .Annotations.summary }}</b>
           <b>Chi tiết:</b> {{ .Annotations.description }}
           <b>Thời gian:</b> {{ .StartsAt.Format "02/01/2006 15:04:05" }}
           {{ end }}

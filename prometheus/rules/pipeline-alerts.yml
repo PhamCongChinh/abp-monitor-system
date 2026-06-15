@@ -4,17 +4,8 @@ groups:
   - name: pipeline_critical
     rules:
 
-      - alert: ServiceDown
-        expr: up == 0
-        for: 2m
-        labels:
-          severity: critical
-        annotations:
-          summary: "{{ $labels.job }} DOWN"
-          description: "{{ $labels.job }} tại {{ $labels.instance }} không phản hồi hơn 2 phút"
-
       - alert: PlatformNoData2h
-        expr: increase(gateway_posts_by_platform_total{platform!~"news_page|tt"}[2h]) == 0
+        expr: increase(gateway_posts_by_platform_total{platform!~"news_page|tt|thread"}[2h]) == 0
         for: 5m
         labels:
           severity: critical
@@ -44,7 +35,7 @@ groups:
           description: "Mount {{ $labels.mountpoint }} trên {{ $labels.instance }} sắp đầy"
 
       - alert: KafkaTotalLagExplosion
-        expr: sum(kafka_consumergroup_lag) > 200000
+        expr: sum(kafka_consumergroup_lag) > 2000
         for: 3m
         labels:
           severity: critical
@@ -56,32 +47,12 @@ groups:
   - name: pipeline_warning
     rules:
 
-      - alert: KafkaLagGrowing
-        expr: deriv(sum by (consumergroup, topic) (kafka_consumergroup_lag)[10m:1m]) > 50
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Kafka lag đang tăng đều ({{ $labels.topic }} / {{ $labels.consumergroup }})"
-          description: "Consumer không theo kịp producer — downstream có thể đang nghẽn. Kiểm tra BullMQ / Java processor"
-
       - alert: KafkaHighLag
         expr: sum by (consumergroup, topic) (kafka_consumergroup_lag) > 500
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "Kafka lag cao: {{ $value | humanize }} ({{ $labels.topic }})"
-          description: "Tồn đọng lớn — nếu tăng tiếp sẽ thành critical"
+          summary: "Kafka lag cao: {{ $value | humanize }} messages"
+          description: "Topic: <b>{{ $labels.topic }}</b> | Group: <b>{{ $labels.consumergroup }}</b> — tồn đọng lớn, nếu vượt 2,000 sẽ chuyển critical"
 
-      - alert: MongoDBConnectionsHigh
-        expr: |
-          mongodb_connections{state="current"}
-          / (mongodb_connections{state="current"} + mongodb_connections{state="available"})
-          > 0.8
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "MongoDB đang dùng {{ $value | humanizePercentage }} số kết nối tối đa"
-          description: "Client không dùng connection pool đúng — combo này từng gây Mongo chết hàng loạt"

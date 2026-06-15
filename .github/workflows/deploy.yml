@@ -22,5 +22,6 @@ jobs:
           envs: TELEGRAM_BOT_TOKEN,TELEGRAM_CHAT_ID
           script: |
             cd ~/abp-monitor-system
+            git checkout -- alertmanager/alertmanager.yml 2>/dev/null || true
             git pull origin main
             bash deploy.sh

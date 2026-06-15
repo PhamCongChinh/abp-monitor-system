@@ -53,13 +53,6 @@ scrape_configs:
           service: "mongodb"
           env: "production"
 
-  - job_name: "redis"
-    static_configs:
-      - targets: ["redis-exporter:9121"]
-        labels:
-          service: "redis"
-          env: "production"
-
   - job_name: "postgres"
     static_configs:
       - targets: ["postgres-exporter:9187"]

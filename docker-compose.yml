@@ -55,6 +55,8 @@ services:
     container_name: alertmanager
     restart: unless-stopped
     user: "65534:65534"
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
     ports:
       - "127.0.0.1:9902:9093"
     volumes:
@@ -77,22 +79,6 @@ services:
       - '--kafka.server=host.docker.internal:9092'
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-
-  redis-exporter:
-    image: oliver006/redis_exporter:v1.63.0
-    container_name: redis-exporter
-    restart: unless-stopped
-    environment:
-      - REDIS_ADDR=${REDIS_ADDR}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-    networks:
-      - default
-      - redisNetwork
     logging:
       driver: "json-file"
       options:
@@ -183,6 +169,3 @@ volumes:
   alertmanager_data:
   grafana_data:
 
-networks:
-  redisNetwork:
-    external: true
