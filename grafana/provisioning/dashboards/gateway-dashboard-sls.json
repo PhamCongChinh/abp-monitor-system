@@ -1,6 +1,6 @@
 {
-  "uid": "gateway-overview-4420",
-  "title": "Overview 4420",
+  "uid": "gateway-overview-sls",
+  "title": "Overview SLS",
   "tags": ["gateway", "golang"],
   "timezone": "Asia/Ho_Chi_Minh",
   "schemaVersion": 39,
@@ -37,7 +37,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "sum(increase(gateway_posts_by_platform_total[$__range]))",
+          "expr": "sum(increase(gateway_posts_by_platform_total{job=\"gateway-sls\"}[$__range]))",
           "legendFormat": "Tổng",
           "instant": true
         }
@@ -81,7 +81,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "sort_desc(increase(gateway_posts_by_platform_total{platform!~\"news_page|tt\"}[$__range]))",
+          "expr": "sort_desc(increase(gateway_posts_by_platform_total{job=\"gateway-sls\",platform!~\"news_page|tt\"}[$__range]))",
           "legendFormat": "{{platform}}",
           "instant": true
         }
@@ -115,7 +115,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "increase(gateway_posts_by_platform_total{platform!~\"news_page|tt\"}[$__range])",
+          "expr": "increase(gateway_posts_by_platform_total{job=\"gateway-sls\",platform!~\"news_page|tt\"}[$__range])",
           "legendFormat": "{{platform}}",
           "instant": true
         }
@@ -146,7 +146,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "rate(gateway_posts_by_platform_total{platform=\"youtube\"}[15m]) * 3600",
+          "expr": "rate(gateway_posts_by_platform_total{job=\"gateway-sls\",platform=\"youtube\"}[15m]) * 3600",
           "legendFormat": "youtube"
         }
       ]
@@ -168,7 +168,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "rate(gateway_posts_by_platform_total{platform=\"facebook\"}[15m]) * 3600",
+          "expr": "rate(gateway_posts_by_platform_total{job=\"gateway-sls\",platform=\"facebook\"}[15m]) * 3600",
           "legendFormat": "facebook"
         }
       ]
@@ -190,7 +190,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "rate(gateway_posts_by_platform_total{platform=\"tiktok\"}[15m]) * 3600",
+          "expr": "rate(gateway_posts_by_platform_total{job=\"gateway-sls\",platform=\"tiktok\"}[15m]) * 3600",
           "legendFormat": "tiktok"
         }
       ]
@@ -212,7 +212,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "rate(gateway_posts_by_platform_total{platform=\"web\"}[15m]) * 3600",
+          "expr": "rate(gateway_posts_by_platform_total{job=\"gateway-sls\",platform=\"web\"}[15m]) * 3600",
           "legendFormat": "web"
         }
       ]
@@ -234,7 +234,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "rate(gateway_posts_by_platform_total{platform=\"telegram\"}[15m]) * 3600",
+          "expr": "rate(gateway_posts_by_platform_total{job=\"gateway-sls\",platform=\"telegram\"}[15m]) * 3600",
           "legendFormat": "telegram"
         }
       ]
@@ -256,7 +256,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "rate(gateway_posts_by_platform_total{platform=\"thread\"}[15m]) * 3600",
+          "expr": "rate(gateway_posts_by_platform_total{job=\"gateway-sls\",platform=\"thread\"}[15m]) * 3600",
           "legendFormat": "thread"
         }
       ]
@@ -278,7 +278,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "rate(gateway_posts_by_platform_total{platform=\"x\"}[15m]) * 3600",
+          "expr": "rate(gateway_posts_by_platform_total{job=\"gateway-sls\",platform=\"x\"}[15m]) * 3600",
           "legendFormat": "x"
         }
       ]
@@ -319,7 +319,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "gateway_dlq_size",
+          "expr": "gateway_dlq_size{job=\"gateway-sls\"}",
           "legendFormat": "DLQ"
         }
       ]
@@ -354,7 +354,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "sum(rate(gateway_kafka_write_total{result=\"success\"}[5m])) / sum(rate(gateway_kafka_write_total[5m])) * 100",
+          "expr": "sum(rate(gateway_kafka_write_total{job=\"gateway-sls\",result=\"success\"}[5m])) / sum(rate(gateway_kafka_write_total{job=\"gateway-sls\"}[5m])) * 100",
           "legendFormat": "Success %"
         }
       ]
@@ -380,12 +380,12 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "sum(rate(gateway_http_errors_total{code=~\"4..\"}[5m])) / sum(rate(gateway_requests_total[5m]))",
+          "expr": "sum(rate(gateway_http_errors_total{job=\"gateway-sls\",code=~\"4..\"}[5m])) / sum(rate(gateway_requests_total{job=\"gateway-sls\"}[5m]))",
           "legendFormat": "4xx"
         },
         {
           "datasource": { "type": "prometheus" },
-          "expr": "sum(rate(gateway_http_errors_total{code=~\"5..\"}[5m])) / sum(rate(gateway_requests_total[5m]))",
+          "expr": "sum(rate(gateway_http_errors_total{job=\"gateway-sls\",code=~\"5..\"}[5m])) / sum(rate(gateway_requests_total{job=\"gateway-sls\"}[5m]))",
           "legendFormat": "5xx"
         }
       ]
