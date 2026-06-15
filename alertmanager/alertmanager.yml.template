@@ -1,14 +1,6 @@
 global:
   resolve_timeout: 5m
 
-time_intervals:
-  - name: night-silence
-    time_intervals:
-      - times:
-          - start_time: '00:00'
-            end_time: '07:00'
-        location: 'Asia/Ho_Chi_Minh'
-
 route:
   receiver: 'telegram-default'
   group_by: ['alertname', 'instance']
@@ -27,12 +19,6 @@ route:
         - alertname = "KafkaHighLag"
       receiver: 'telegram-default'
       repeat_interval: 1h
-      mute_time_intervals:
-        - night-silence
-
-    - receiver: 'telegram-default'
-      mute_time_intervals:
-        - night-silence
 
 # Khi critical firing trên instance → chặn toàn bộ warning cùng instance (tránh spam)
 inhibit_rules:
