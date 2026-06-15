@@ -15,8 +15,6 @@ route:
   group_wait: 30s
   group_interval: 5m
   repeat_interval: 4h
-  mute_time_intervals:
-    - night-silence
 
   routes:
     - matchers:
@@ -29,6 +27,12 @@ route:
         - alertname = "KafkaHighLag"
       receiver: 'telegram-default'
       repeat_interval: 1h
+      mute_time_intervals:
+        - night-silence
+
+    - receiver: 'telegram-default'
+      mute_time_intervals:
+        - night-silence
 
 # Khi critical firing trên instance → chặn toàn bộ warning cùng instance (tránh spam)
 inhibit_rules:
