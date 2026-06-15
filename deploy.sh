@@ -19,6 +19,9 @@ echo "Generated alertmanager/alertmanager.yml"
 
 docker compose up -d --remove-orphans
 
+# Restart Grafana để áp dụng thay đổi provisioning (xóa/thêm dashboard)
+docker restart grafana
+
 # Reload Prometheus để áp dụng rules mới (cần --web.enable-lifecycle)
 sleep 5
 curl -s -X POST http://localhost:9901/-/reload && echo "Prometheus reloaded"
