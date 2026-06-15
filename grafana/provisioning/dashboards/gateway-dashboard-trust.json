@@ -1,6 +1,6 @@
 {
   "uid": "gateway-overview-trust",
-  "title": "Overview Trust",
+  "title": "Gateway Overview Trust",
   "tags": ["gateway", "golang"],
   "timezone": "Asia/Ho_Chi_Minh",
   "schemaVersion": 39,

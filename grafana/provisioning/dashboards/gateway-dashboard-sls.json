@@ -1,6 +1,6 @@
 {
   "uid": "gateway-overview-sls",
-  "title": "Overview SLS",
+  "title": "Gateway Overview SLS",
   "tags": ["gateway", "golang"],
   "timezone": "Asia/Ho_Chi_Minh",
   "schemaVersion": 39,
