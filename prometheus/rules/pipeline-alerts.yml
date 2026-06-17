@@ -26,13 +26,13 @@ groups:
       - alert: DiskCritical
         expr: |
           (node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs"}
-          / node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs"}) * 100 < 10
+          / node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs"}) * 100 < 5
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "Disk còn {{ $value | humanize }}% — MongoDB sẽ dừng ghi"
-          description: "Mount {{ $labels.mountpoint }} trên {{ $labels.instance }} sắp đầy"
+          summary: "Disk > 95% — MongoDB sẽ dừng ghi (còn {{ $value | humanize }}%)"
+          description: "Mount {{ $labels.mountpoint }} trên {{ $labels.instance }} sắp đầy hoàn toàn"
 
       - alert: KafkaTotalLagExplosion
         expr: sum(kafka_consumergroup_lag) > 2000
@@ -46,6 +46,20 @@ groups:
   # ─── WARNING — xem trong giờ ───────────────────────────────────────────────
   - name: pipeline_warning
     rules:
+
+      - alert: DiskWarning
+        expr: |
+          (node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs"}
+          / node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs"}) * 100 < 10
+          and
+          (node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs"}
+          / node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs"}) * 100 >= 5
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk > 90% — cần dọn dẹp sớm (còn {{ $value | humanize }}%)"
+          description: "Mount {{ $labels.mountpoint }} trên {{ $labels.instance }} đang đầy dần"
 
       - alert: KafkaHighLag
         expr: sum by (consumergroup, topic) (kafka_consumergroup_lag) > 500 and sum by (consumergroup, topic) (kafka_consumergroup_lag) <= 1000
