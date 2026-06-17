@@ -543,10 +543,76 @@
     },
 
     {
+      "id": 900,
+      "title": "Collection Sizes",
+      "type": "row",
+      "gridPos": { "x": 0, "y": 86, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+
+    {
+      "id": 901,
+      "title": "Top Collections — Storage Size (GB)",
+      "type": "bargauge",
+      "gridPos": { "x": 0, "y": 87, "w": 12, "h": 10 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "showUnfilled": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decgbytes",
+          "min": 0,
+          "decimals": 3,
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "#5794F2", "value": null }, { "color": "#F2CC0C", "value": 1 }, { "color": "#F2495C", "value": 5 }] }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "topk(15, mongodb_collstats_storageStats_storageSize / 1024 / 1024 / 1024)",
+          "legendFormat": "{{database}}.{{collection}}",
+          "instant": true
+        }
+      ]
+    },
+
+    {
+      "id": 902,
+      "title": "Top Collections — Document Size (GB)",
+      "type": "bargauge",
+      "gridPos": { "x": 12, "y": 87, "w": 12, "h": 10 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "showUnfilled": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decgbytes",
+          "min": 0,
+          "decimals": 3,
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "#73BF69", "value": null }, { "color": "#F2CC0C", "value": 1 }, { "color": "#F2495C", "value": 5 }] }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "topk(15, mongodb_collstats_storageStats_size / 1024 / 1024 / 1024)",
+          "legendFormat": "{{database}}.{{collection}}",
+          "instant": true
+        }
+      ]
+    },
+
+    {
       "id": 800,
       "title": "Asserts & Errors",
       "type": "row",
-      "gridPos": { "x": 0, "y": 86, "w": 24, "h": 1 },
+      "gridPos": { "x": 0, "y": 97, "w": 24, "h": 1 },
       "collapsed": false
     },
 
@@ -554,7 +620,7 @@
       "id": 801,
       "title": "Asserts/sec",
       "type": "timeseries",
-      "gridPos": { "x": 0, "y": 87, "w": 12, "h": 7 },
+      "gridPos": { "x": 0, "y": 98, "w": 12, "h": 7 },
       "fieldConfig": {
         "defaults": { "unit": "ops", "custom": { "lineWidth": 2, "fillOpacity": 10, "gradientMode": "opacity" } },
         "overrides": [
@@ -573,7 +639,7 @@
       "id": 802,
       "title": "Replication Lag (nếu có Replica Set)",
       "type": "timeseries",
-      "gridPos": { "x": 12, "y": 87, "w": 12, "h": 7 },
+      "gridPos": { "x": 12, "y": 98, "w": 12, "h": 7 },
       "fieldConfig": {
         "defaults": {
           "unit": "s",
