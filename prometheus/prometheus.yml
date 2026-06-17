@@ -29,11 +29,18 @@ scrape_configs:
           instance: "vps-main"
           env: "production"
 
-  - job_name: "gateway"
+  - job_name: "gateway-sls"
     static_configs:
       - targets: ["host.docker.internal:4416"]
         labels:
-          service: "gateway"
+          service: "gateway-sls"
+          env: "production"
+
+  - job_name: "gateway-trust"
+    static_configs:
+      - targets: ["host.docker.internal:4420"]
+        labels:
+          service: "gateway-trust"
           env: "production"
 
   - job_name: "cadvisor"

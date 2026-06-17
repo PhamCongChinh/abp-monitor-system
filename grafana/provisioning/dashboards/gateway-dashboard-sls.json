@@ -1,0 +1,395 @@
+{
+  "uid": "gateway-overview-sls",
+  "title": "Gateway Overview SLS",
+  "tags": ["gateway", "golang"],
+  "timezone": "Asia/Ho_Chi_Minh",
+  "schemaVersion": 39,
+  "refresh": "30s",
+  "time": { "from": "now-3h", "to": "now" },
+  "panels": [
+
+    {
+      "id": 500,
+      "title": "Dữ liệu hôm nay",
+      "type": "row",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+
+    {
+      "id": 501,
+      "title": "Tổng bài hôm nay",
+      "type": "stat",
+      "timeFrom": "now/d",
+      "gridPos": { "x": 0, "y": 1, "w": 4, "h": 8 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "textMode": "auto",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "fixed", "fixedColor": "#73BF69" }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sum(increase(gateway_posts_by_platform_total{job=~\"gateway(-sls)?\"}[$__range]))",
+          "legendFormat": "Tổng",
+          "instant": true
+        }
+      ]
+    },
+
+    {
+      "id": 502,
+      "title": "Số bài theo nền tảng hôm nay",
+      "type": "bargauge",
+      "timeFrom": "now/d",
+      "gridPos": { "x": 4, "y": 1, "w": 12, "h": 8 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "valueMode": "color",
+        "showUnfilled": true,
+        "minVizWidth": 0,
+        "minVizHeight": 10
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "blue", "value": null }]
+          }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "youtube" },   "properties": [{ "id": "color", "value": { "fixedColor": "#FF0000", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "facebook" },  "properties": [{ "id": "color", "value": { "fixedColor": "#1877F2", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "tiktok" },    "properties": [{ "id": "color", "value": { "fixedColor": "#FE2C55", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "web" },       "properties": [{ "id": "color", "value": { "fixedColor": "#00CED1", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "thread" },    "properties": [{ "id": "color", "value": { "fixedColor": "#A0A0A0", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "telegram" },  "properties": [{ "id": "color", "value": { "fixedColor": "#26A5E4", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "x" },         "properties": [{ "id": "color", "value": { "fixedColor": "#E7E7E7", "mode": "fixed" } }] }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sort_desc(increase(gateway_posts_by_platform_total{job=~\"gateway(-sls)?\",platform!~\"news_page|tt\"}[$__range]))",
+          "legendFormat": "{{platform}}",
+          "instant": true
+        }
+      ]
+    },
+
+    {
+      "id": 503,
+      "title": "Phân bổ nền tảng hôm nay",
+      "type": "piechart",
+      "timeFrom": "now/d",
+      "gridPos": { "x": 16, "y": 1, "w": 8, "h": 8 },
+      "options": {
+        "pieType": "pie",
+        "legend": { "displayMode": "hidden", "placement": "bottom", "values": [] },
+        "tooltip": { "mode": "single" },
+        "displayLabels": ["name", "percent"]
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "youtube" },   "properties": [{ "id": "color", "value": { "fixedColor": "#FF0000", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "facebook" },  "properties": [{ "id": "color", "value": { "fixedColor": "#1877F2", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "tiktok" },    "properties": [{ "id": "color", "value": { "fixedColor": "#FE2C55", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "web" },       "properties": [{ "id": "color", "value": { "fixedColor": "#00CED1", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "thread" },    "properties": [{ "id": "color", "value": { "fixedColor": "#A0A0A0", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "telegram" },  "properties": [{ "id": "color", "value": { "fixedColor": "#26A5E4", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "x" },         "properties": [{ "id": "color", "value": { "fixedColor": "#E7E7E7", "mode": "fixed" } }] }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "increase(gateway_posts_by_platform_total{job=~\"gateway(-sls)?\",platform!~\"news_page|tt\"}[$__range])",
+          "legendFormat": "{{platform}}",
+          "instant": true
+        }
+      ]
+    },
+
+    {
+      "id": 600,
+      "title": "Tốc độ bài/giờ theo nền tảng",
+      "type": "row",
+      "gridPos": { "x": 0, "y": 9, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+
+    {
+      "id": 601,
+      "title": "YouTube",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 10, "w": 12, "h": 7 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": { "mode": "fixed", "fixedColor": "#FF0000" },
+          "custom": { "lineWidth": 2, "fillOpacity": 15, "gradientMode": "opacity" }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "rate(gateway_posts_by_platform_total{job=~\"gateway(-sls)?\",platform=\"youtube\"}[15m]) * 3600",
+          "legendFormat": "youtube"
+        }
+      ]
+    },
+
+    {
+      "id": 602,
+      "title": "Facebook",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 10, "w": 12, "h": 7 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": { "mode": "fixed", "fixedColor": "#1877F2" },
+          "custom": { "lineWidth": 2, "fillOpacity": 15, "gradientMode": "opacity" }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "rate(gateway_posts_by_platform_total{job=~\"gateway(-sls)?\",platform=\"facebook\"}[15m]) * 3600",
+          "legendFormat": "facebook"
+        }
+      ]
+    },
+
+    {
+      "id": 603,
+      "title": "TikTok",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 17, "w": 12, "h": 7 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": { "mode": "fixed", "fixedColor": "#FE2C55" },
+          "custom": { "lineWidth": 2, "fillOpacity": 15, "gradientMode": "opacity" }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "rate(gateway_posts_by_platform_total{job=~\"gateway(-sls)?\",platform=\"tiktok\"}[15m]) * 3600",
+          "legendFormat": "tiktok"
+        }
+      ]
+    },
+
+    {
+      "id": 604,
+      "title": "Web",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 17, "w": 12, "h": 7 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": { "mode": "fixed", "fixedColor": "#00CED1" },
+          "custom": { "lineWidth": 2, "fillOpacity": 15, "gradientMode": "opacity" }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "rate(gateway_posts_by_platform_total{job=~\"gateway(-sls)?\",platform=\"web\"}[15m]) * 3600",
+          "legendFormat": "web"
+        }
+      ]
+    },
+
+    {
+      "id": 605,
+      "title": "Telegram",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 24, "w": 12, "h": 7 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": { "mode": "fixed", "fixedColor": "#26A5E4" },
+          "custom": { "lineWidth": 2, "fillOpacity": 15, "gradientMode": "opacity" }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "rate(gateway_posts_by_platform_total{job=~\"gateway(-sls)?\",platform=\"telegram\"}[15m]) * 3600",
+          "legendFormat": "telegram"
+        }
+      ]
+    },
+
+    {
+      "id": 606,
+      "title": "Thread",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 24, "w": 12, "h": 7 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": { "mode": "fixed", "fixedColor": "#A0A0A0" },
+          "custom": { "lineWidth": 2, "fillOpacity": 15, "gradientMode": "opacity" }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "rate(gateway_posts_by_platform_total{job=~\"gateway(-sls)?\",platform=\"thread\"}[15m]) * 3600",
+          "legendFormat": "thread"
+        }
+      ]
+    },
+
+    {
+      "id": 607,
+      "title": "X (Twitter)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 31, "w": 12, "h": 7 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": { "mode": "fixed", "fixedColor": "#E7E7E7" },
+          "custom": { "lineWidth": 2, "fillOpacity": 15, "gradientMode": "opacity" }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "rate(gateway_posts_by_platform_total{job=~\"gateway(-sls)?\",platform=\"x\"}[15m]) * 3600",
+          "legendFormat": "x"
+        }
+      ]
+    },
+
+    {
+      "id": 700,
+      "title": "Sức khỏe hệ thống",
+      "type": "row",
+      "gridPos": { "x": 0, "y": 38, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+
+    {
+      "id": 3,
+      "title": "Dead Letter Queue",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 39, "w": 4, "h": 4 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "textMode": "auto",
+        "graphMode": "area"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#73BF69", "value": null },
+              { "color": "#F2CC0C", "value": 10 },
+              { "color": "#F2495C", "value": 50 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "gateway_dlq_size{job=~\"gateway(-sls)?\"}",
+          "legendFormat": "DLQ"
+        }
+      ]
+    },
+
+    {
+      "id": 14,
+      "title": "Kafka Success Rate",
+      "type": "gauge",
+      "gridPos": { "x": 4, "y": 39, "w": 4, "h": 4 },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "auto",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#F2495C", "value": null },
+              { "color": "#F2CC0C", "value": 90 },
+              { "color": "#73BF69", "value": 99 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sum(rate(gateway_kafka_write_total{job=~\"gateway(-sls)?\",result=\"success\"}[5m])) / sum(rate(gateway_kafka_write_total{job=~\"gateway(-sls)?\"}[5m])) * 100",
+          "legendFormat": "Success %"
+        }
+      ]
+    },
+
+    {
+      "id": 15,
+      "title": "Lỗi HTTP (4xx / 5xx)",
+      "type": "timeseries",
+      "gridPos": { "x": 8, "y": 39, "w": 16, "h": 4 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "custom": { "lineWidth": 2, "fillOpacity": 20, "gradientMode": "opacity" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "4xx" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2CC0C", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "5xx" }, "properties": [{ "id": "color", "value": { "fixedColor": "#F2495C", "mode": "fixed" } }] }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sum(rate(gateway_http_errors_total{job=~\"gateway(-sls)?\",code=~\"4..\"}[5m])) / sum(rate(gateway_requests_total{job=~\"gateway(-sls)?\"}[5m]))",
+          "legendFormat": "4xx"
+        },
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sum(rate(gateway_http_errors_total{job=~\"gateway(-sls)?\",code=~\"5..\"}[5m])) / sum(rate(gateway_requests_total{job=~\"gateway(-sls)?\"}[5m]))",
+          "legendFormat": "5xx"
+        }
+      ]
+    }
+
+  ]
+}
