@@ -5,7 +5,7 @@ groups:
     rules:
 
       - alert: PlatformNoData2h
-        expr: increase(gateway_posts_by_platform_total{platform!~"news_page|tt|thread"}[2h]) == 0
+        expr: increase(gateway_posts_by_platform_total{platform=~"web|tiktok|facebook|youtube"}[2h]) == 0
         for: 5m
         labels:
           severity: critical
