@@ -48,11 +48,20 @@ groups:
     rules:
 
       - alert: KafkaHighLag
-        expr: sum by (consumergroup, topic) (kafka_consumergroup_lag) > 500
+        expr: sum by (consumergroup, topic) (kafka_consumergroup_lag) > 500 and sum by (consumergroup, topic) (kafka_consumergroup_lag) <= 1000
         for: 5m
         labels:
           severity: warning
         annotations:
           summary: "Kafka lag cao: {{ $value | humanize }} messages"
-          description: "Topic: <b>{{ $labels.topic }}</b> | Group: <b>{{ $labels.consumergroup }}</b> — tồn đọng lớn, nếu vượt 2,000 sẽ chuyển critical"
+          description: "Topic: <b>{{ $labels.topic }}</b> | Group: <b>{{ $labels.consumergroup }}</b> — tồn đọng lớn, nếu vượt 1,000 sẽ chuyển critical"
+
+      - alert: KafkaCriticalLag
+        expr: sum by (consumergroup, topic) (kafka_consumergroup_lag) > 1000
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Kafka lag khẩn cấp: {{ $value | humanize }} messages"
+          description: "Topic: <b>{{ $labels.topic }}</b> | Group: <b>{{ $labels.consumergroup }}</b> — tồn đọng nghiêm trọng, cần xử lý ngay"
 

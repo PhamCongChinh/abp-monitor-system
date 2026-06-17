@@ -18,7 +18,12 @@ route:
     - matchers:
         - alertname = "KafkaHighLag"
       receiver: 'telegram-default'
-      repeat_interval: 1h
+      repeat_interval: 30m
+
+    - matchers:
+        - alertname = "KafkaCriticalLag"
+      receiver: 'telegram-critical'
+      repeat_interval: 30m
 
 # Khi critical firing trên instance → chặn toàn bộ warning cùng instance (tránh spam)
 inhibit_rules:
