@@ -10,11 +10,11 @@ services:
       - /sys:/host/sys:ro
       - /:/rootfs:ro
     command:
-      - '--path.procfs=/host/proc'
-      - '--path.sysfs=/host/sys'
-      - '--path.rootfs=/rootfs'
-      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
-      - '--web.listen-address=:9101'
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--path.rootfs=/rootfs"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+      - "--web.listen-address=:9101"
     logging:
       driver: "json-file"
       options:
@@ -33,13 +33,13 @@ services:
       - ./prometheus/rules:/etc/prometheus/rules:ro
       - prometheus_data:/prometheus
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--storage.tsdb.retention.time=30d'
-      - '--storage.tsdb.retention.size=10GB'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
-      - '--web.enable-lifecycle'
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=3d"
+      - "--storage.tsdb.retention.size=1GB"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+      - "--web.enable-lifecycle"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
@@ -63,8 +63,8 @@ services:
       - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
       - alertmanager_data:/alertmanager
     command:
-      - '--config.file=/etc/alertmanager/alertmanager.yml'
-      - '--storage.path=/alertmanager'
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
     logging:
       driver: "json-file"
       options:
@@ -76,7 +76,7 @@ services:
     container_name: kafka-exporter
     restart: unless-stopped
     command:
-      - '--kafka.server=host.docker.internal:9092'
+      - "--kafka.server=host.docker.internal:9092"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     logging:
@@ -92,8 +92,8 @@ services:
     environment:
       - MONGODB_URI=${MONGODB_URI}
     command:
-      - '--collect-all'
-      - '--compatible-mode'
+      - "--collect-all"
+      - "--compatible-mode"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     logging:
@@ -129,9 +129,9 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker:/var/lib/docker:ro
     command:
-      - '--housekeeping_interval=30s'
-      - '--docker_only=true'
-      - '--disable_metrics=percpu,sched,tcp,udp,disk,diskIO,hugetlb,referenced_memory,cpu_topology,resctrl'
+      - "--housekeeping_interval=30s"
+      - "--docker_only=true"
+      - "--disable_metrics=percpu,sched,tcp,udp,disk,diskIO,hugetlb,referenced_memory,cpu_topology,resctrl"
     logging:
       driver: "json-file"
       options:
@@ -168,4 +168,3 @@ volumes:
   prometheus_data:
   alertmanager_data:
   grafana_data:
-
